@@ -53,7 +53,7 @@ class SleepClassifiers(object):
         print "\nREF ranking: "
         print selector.ranking_ 
     
-    def SVMClassifier(self, crossValidation = False, folds = 5):
+    def SVMClassifier(self, crossValidation = False, folds = 10):
         """
         SVM classifier 
         """
@@ -73,12 +73,16 @@ class SleepClassifiers(object):
             ret = self.showCrossValidationInfo(acc_scores, precisions, recalls, f1, roc_aucs)
             return ret  
     
-    def RFClassifier(self, crossValidation = False, folds = 5):
+    def RFClassifier(self, seed = None, crossValidation = False, folds = 10):
         """
         Random Forest classifier 
         """
-        print "\n================== Random Forest Classification " 
-        clf = RandomForestClassifier(n_jobs = -1, verbose = 0)
+
+        print "\n================== Random Forest Classification "
+        if seed is None:
+            clf = RandomForestClassifier(n_jobs = -1, verbose = 0)
+        else:
+            clf = RandomForestClassifier(n_estimators=35, criterion='entropy', n_jobs = -1, random_state = seed)
         if not crossValidation:
             clf.fit(self.trainData, self.trainLabel) 
             predict = clf.predict(self.testData) 
@@ -93,7 +97,7 @@ class SleepClassifiers(object):
             ret = self.showCrossValidationInfo(acc_scores, precisions, recalls, f1, roc_aucs)
             return ret 
     
-    def NBClassifier(self, crossValidation = False, folds = 5): 
+    def NBClassifier(self, crossValidation = False, folds = 10):
         """
         Naive Bayes Classifier (Gaussian)
         """
@@ -114,7 +118,7 @@ class SleepClassifiers(object):
             return ret  
             
     
-    def DTClassifier(self, crossValidation = False, folds = 5):
+    def DTClassifier(self, crossValidation = False, folds = 10):
         """
         Decision Tree classifier 
         """
@@ -123,9 +127,7 @@ class SleepClassifiers(object):
         if not crossValidation:
             clf.fit(self.trainData, self.trainLabel) 
             predict = clf.predict(self.testData) 
-            score = clf.predict_proba(self.testData) 
-            #print clf.feature_importances_  
-            #print ""
+            score = clf.predict_proba(self.testData)
             from sklearn import tree
             with open('model.dot', 'w') as f:
                 f = tree.export_graphviz(clf, out_file = f) 
@@ -139,7 +141,7 @@ class SleepClassifiers(object):
             ret = self.showCrossValidationInfo(acc_scores, precisions, recalls, f1, roc_aucs)
             return ret 
     
-    def LRClassifier(self, crossValidation = False, folds = 5):
+    def LRClassifier(self, crossValidation = False, folds = 10):
         """
         Logistic Regression classifier 
         """

@@ -26,8 +26,8 @@ class DataSegment(object):
         else:
             self.breakTime = self.createTimeList[self.breakId] 
         self.target_names = ['Not_sleep', 'Sleep'] 
-        self.HOUR_BUCKETS = 3 
-        self.MAXMOVEMENT = 6
+        self.HOUR_BUCKETS = 4
+        self.MAXMOVEMENT = 20
         self.data, self.label, self.timeList = self.segmentData() 
         
     def getCreateTimeList(self):
@@ -126,30 +126,30 @@ class DataSegment(object):
                     if idx == self.breakId:
                         self.continueDataBreakId = len(data) + 1 
                     # Check the time delta to the previous record 
-                    if (createTime - self.combinedData[idx - 1].createTime).total_seconds() >= 360:
+                    if (createTime - self.combinedData[idx - 1].createTime).total_seconds() >= 600:
                         
                         # split as a new segment 
                         bucketCnt = sum(hourBuckets)
                         hourBuckets = [val / bucketCnt for val in hourBuckets] 
                         tmpData += hourBuckets      # Append the hour buckets to data list 
-                        #tmpData.append(array(lightMaxList).mean())      # Append the Max illuminance mean 
-                        #tmpData.append(array(lightMaxList).std())       # Append the Max illuminance std 
-                        #tmpData.append(array(lightMinList).mean())      # Append the Min illuminance mean 
-                        #tmpData.append(array(lightMinList).std())       # Append the Min illuminance std 
+                        tmpData.append(array(lightMaxList).mean())      # Append the Max illuminance mean
+                        #tmpData.append(array(lightMaxList).std())       # Append the Max illuminance std
+                        tmpData.append(array(lightMinList).mean())      # Append the Min illuminance mean
+                        #tmpData.append(array(lightMinList).std())       # Append the Min illuminance std
                         tmpData.append(array(lightAvgList).mean())      # Append the Avg illuminance mean 
-                        tmpData.append(array(lightAvgList).std())       # Append the Avg illuminance std 
-                        #tmpData.append(array(decibelMaxList).mean())    # Append the Max decibel mean 
-                        #tmpData.append(array(decibelMaxList).std())     # Append the Max decibel std 
-                        #tmpData.append(array(decibelMinList).mean())    # Append the Min decibel mean 
-                        #tmpData.append(array(decibelMinList).std())     # Append the Min decibel std 
+                        #tmpData.append(array(lightAvgList).std())       # Append the Avg illuminance std
+                        tmpData.append(array(decibelMaxList).mean())    # Append the Max decibel mean
+                        #tmpData.append(array(decibelMaxList).std())     # Append the Max decibel std
+                        tmpData.append(array(decibelMinList).mean())    # Append the Min decibel mean
+                        #tmpData.append(array(decibelMinList).std())     # Append the Min decibel std
                         tmpData.append(array(decibelAvgList).mean())    # Append the Avg decibel mean 
-                        tmpData.append(array(decibelAvgList).std())     # Append the Avg decibel std 
+                        #tmpData.append(array(decibelAvgList).std())     # Append the Avg decibel std
                         tmpData.append(array(powerList).mean())         # Append the power level mean 
-                        tmpData.append(array(powerList).std())          # Append the power level std 
-                        #tmpData.append(array(proximityList).mean())     # Append the proximity mean 
-                        #tmpData.append(array(proximityList).std())      # Append the proximity std 
+                        #tmpData.append(array(powerList).std())          # Append the power level std
+                        tmpData.append(array(proximityList).mean())     # Append the proximity mean
+                        #tmpData.append(array(proximityList).std())      # Append the proximity std
                         tmpData.append(array(screenOnList).mean())      # Append the screen on mean 
-                        tmpData.append(array(screenOnList).std())       # Append the screen on std 
+                        #tmpData.append(array(screenOnList).std())       # Append the screen on std
                         #if len(timeList) >= 1:
                         #    tmpData.append((tmpTime['start'] - timeList[-1]['end']).total_seconds())
                         #else:
@@ -252,24 +252,24 @@ class DataSegment(object):
                     bucketCnt = sum(hourBuckets)
                     hourBuckets = [val / bucketCnt for val in hourBuckets] 
                     tmpData += hourBuckets      # Append the hour buckets to data list 
-                    #tmpData.append(array(lightMaxList).mean())      # Append the Max illuminance mean 
-                    #tmpData.append(array(lightMaxList).std())       # Append the Max illuminance std 
-                    #tmpData.append(array(lightMinList).mean())      # Append the Min illuminance mean 
-                    #tmpData.append(array(lightMinList).std())       # Append the Min illuminance std 
+                    tmpData.append(array(lightMaxList).mean())      # Append the Max illuminance mean
+                    #tmpData.append(array(lightMaxList).std())       # Append the Max illuminance std
+                    tmpData.append(array(lightMinList).mean())      # Append the Min illuminance mean
+                    #tmpData.append(array(lightMinList).std())       # Append the Min illuminance std
                     tmpData.append(array(lightAvgList).mean())      # Append the Avg illuminance mean 
-                    tmpData.append(array(lightAvgList).std())       # Append the Avg illuminance std 
-                    #tmpData.append(array(decibelMaxList).mean())    # Append the Max decibel mean 
-                    #tmpData.append(array(decibelMaxList).std())     # Append the Max decibel std 
-                    #tmpData.append(array(decibelMinList).mean())    # Append the Min decibel mean 
-                    #tmpData.append(array(decibelMinList).std())     # Append the Min decibel std 
+                    #tmpData.append(array(lightAvgList).std())       # Append the Avg illuminance std
+                    tmpData.append(array(decibelMaxList).mean())    # Append the Max decibel mean
+                    #tmpData.append(array(decibelMaxList).std())     # Append the Max decibel std
+                    tmpData.append(array(decibelMinList).mean())    # Append the Min decibel mean
+                    #tmpData.append(array(decibelMinList).std())     # Append the Min decibel std
                     tmpData.append(array(decibelAvgList).mean())    # Append the Avg decibel mean 
-                    tmpData.append(array(decibelAvgList).std())     # Append the Avg decibel std 
+                    #tmpData.append(array(decibelAvgList).std())     # Append the Avg decibel std
                     tmpData.append(array(powerList).mean())         # Append the power level mean 
-                    tmpData.append(array(powerList).std())          # Append the power level std 
-                    #tmpData.append(array(proximityList).mean())     # Append the proximity mean 
-                    #tmpData.append(array(proximityList).std())      # Append the proximity std 
+                    #tmpData.append(array(powerList).std())          # Append the power level std
+                    tmpData.append(array(proximityList).mean())     # Append the proximity mean
+                    #tmpData.append(array(proximityList).std())      # Append the proximity std
                     tmpData.append(array(screenOnList).mean())      # Append the screen on mean 
-                    tmpData.append(array(screenOnList).std())       # Append the screen on std 
+                    #tmpData.append(array(screenOnList).std())       # Append the screen on std
                     #if len(timeList) >= 1:
                     #    tmpData.append((tmpTime['start'] - timeList[-1]['end']).total_seconds())
                     #else:
@@ -290,24 +290,24 @@ class DataSegment(object):
             bucketCnt = sum(hourBuckets)
             hourBuckets = [val / bucketCnt for val in hourBuckets] 
             tmpData += hourBuckets      # Append the hour buckets to data list 
-            #tmpData.append(array(lightMaxList).mean())      # Append the Max illuminance mean 
-            #tmpData.append(array(lightMaxList).std())       # Append the Max illuminance std 
-            #tmpData.append(array(lightMinList).mean())      # Append the Min illuminance mean 
-            #tmpData.append(array(lightMinList).std())       # Append the Min illuminance std 
+            tmpData.append(array(lightMaxList).mean())      # Append the Max illuminance mean
+            #tmpData.append(array(lightMaxList).std())       # Append the Max illuminance std
+            tmpData.append(array(lightMinList).mean())      # Append the Min illuminance mean
+            #tmpData.append(array(lightMinList).std())       # Append the Min illuminance std
             tmpData.append(array(lightAvgList).mean())      # Append the Avg illuminance mean 
-            tmpData.append(array(lightAvgList).std())       # Append the Avg illuminance std 
-            #tmpData.append(array(decibelMaxList).mean())    # Append the Max decibel mean 
-            #tmpData.append(array(decibelMaxList).std())     # Append the Max decibel std 
-            #tmpData.append(array(decibelMinList).mean())    # Append the Min decibel mean 
-            #tmpData.append(array(decibelMinList).std())     # Append the Min decibel std 
+            #tmpData.append(array(lightAvgList).std())       # Append the Avg illuminance std
+            tmpData.append(array(decibelMaxList).mean())    # Append the Max decibel mean
+            #tmpData.append(array(decibelMaxList).std())     # Append the Max decibel std
+            tmpData.append(array(decibelMinList).mean())    # Append the Min decibel mean
+            #tmpData.append(array(decibelMinList).std())     # Append the Min decibel std
             tmpData.append(array(decibelAvgList).mean())    # Append the Avg decibel mean 
-            tmpData.append(array(decibelAvgList).std())     # Append the Avg decibel std 
+            #tmpData.append(array(decibelAvgList).std())     # Append the Avg decibel std
             tmpData.append(array(powerList).mean())         # Append the power level mean 
-            tmpData.append(array(powerList).std())          # Append the power level std 
-            #tmpData.append(array(proximityList).mean())     # Append the proximity mean 
-            #tmpData.append(array(proximityList).std())      # Append the proximity std 
+            #tmpData.append(array(powerList).std())          # Append the power level std
+            tmpData.append(array(proximityList).mean())     # Append the proximity mean
+            #tmpData.append(array(proximityList).std())      # Append the proximity std
             tmpData.append(array(screenOnList).mean())      # Append the screen on mean 
-            tmpData.append(array(screenOnList).std())       # Append the screen on std 
+            #tmpData.append(array(screenOnList).std())       # Append the screen on std
             #if len(timeList) >= 1:
             #    tmpData.append((tmpTime['start'] - timeList[-1]['end']).total_seconds())
             #else:
@@ -322,22 +322,22 @@ class DataSegment(object):
                 label.append(1) 
         return array(data), array(label), timeList 
             
-    def newAdjustPredicts(self, predicts):
+    def newAdjustPredicts(self, rawpredicts):
         posCount = 0 
         posSum = 0.0 
         negCount = 0 
         negSum = 0.0 
-        for idx in range(len(self.data)):
-            if predicts[idx] == 1:
-                posSum += self.data.item(idx, self.HOUR_BUCKETS) 
+        for i in range(len(self.data)):
+            if rawpredicts[i] == 1:
+                posSum += self.data.item(i, self.HOUR_BUCKETS)
                 posCount += 1
             else:
-                negSum += self.data.item(idx, self.HOUR_BUCKETS)
+                negSum += self.data.item(i, self.HOUR_BUCKETS)
                 negCount += 1
         if (posSum / posCount) < (negSum / negCount):
-            return predicts 
+            return rawpredicts
         else:
-            return -(predicts - 1) 
+            return -(rawpredicts - 1)
         
     
     def showClusteringMeasures(self, predicts):

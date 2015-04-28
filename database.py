@@ -33,7 +33,7 @@ class DatabaseHelper():
         data = []
         sqlstr = "SELECT createTime as \"[timestamp]\", trackDate, movement, illuminanceMax, illuminanceMin, illuminanceAvg, illuminanceStd, \
                     decibelMax, decibelMin, decibelAvg, decibelStd, isCharging, powerLevel, proximity, ssid, appUsage \
-                    FROM sensingdata" 
+                    FROM sensingdata ORDER BY createTime ASC"
         try:
             cur = self.con.cursor()
             cur.execute(sqlstr)
@@ -42,14 +42,32 @@ class DatabaseHelper():
             for row in rows:
                 createTime = row[0]
                 trackDate = row[1]
-                movement = int(row[2]) 
+                movement = int(row[2])
                 illuminanceMax = float(row[3])
+                if illuminanceMax < 0:
+                    illuminanceMax = 0.0
+                #if illuminanceMax >= 1000.0:
+                #    illuminanceMax = 1000.0
                 illuminanceMin = float(row[4])
+                if illuminanceMin < 0:
+                    illuminanceMin = 0.0
+                #if illuminanceMin >= 1000.0:
+                #    illuminanceMin = 1000.0
                 illuminanceAvg = float(row[5])
+                if illuminanceAvg < 0:
+                    illuminanceAvg = 0.0
+                #if illuminanceAvg >= 1000.0:
+                #    illuminanceAvg = 1000.0
                 illuminanceStd = float(row[6])
                 decibelMax = int(row[7])
+                if decibelMax < 0:
+                    decibelMax = 30.0
                 decibelMin = int(row[8])
+                if decibelMin < 0:
+                    decibelMin = 30.0
                 decibelAvg = int(row[9])
+                if decibelAvg < 0:
+                    decibelAvg = 30.0
                 decibelStd = int(row[10])
                 isCharging = int(row[11])
                 powerLevel = float(row[12])

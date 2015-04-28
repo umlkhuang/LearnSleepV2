@@ -1,19 +1,26 @@
-from dataCombiner import DataCombiner 
+from sklearn.tree import DecisionTreeClassifier
+from dataCombiner import DataCombiner
 from dataGenerator import DataGenerator 
 from sklearn.linear_model import LogisticRegression 
 from sklearn.metrics import accuracy_score, confusion_matrix, classification_report, roc_curve, auc
-from glob import glob 
+from glob import glob
+from sklearn.externals import joblib
+
 import random 
 
 class GeneralModel(object):
-    def __init__(self, ratio = 0.2):
+    def __init__(self, ratio = 0.2, saveModel = True):
         self.ratio = ratio 
         self.target_names = ['Not_sleep', 'Sleep'] 
-        self.dbList = self.getDBNames() 
-        self.combindedData = self.getData() 
-        generator = DataGenerator(self.combindedData, 0.0, 0.0) 
-        self.data, self.label = generator.generateFullDataset() 
-        self.clf = self.generalLRModel() 
+        self.dbList = self.getDBNames()
+        if saveModel:
+            self.combindedData = self.getData()
+            generator = DataGenerator(self.combindedData, 0.0, 0.0)
+            self.data, self.label = generator.generateFullDataset(t=12)
+            self.clf = self.decisionTreeModel()
+            joblib.dump(self.clf, "generalModel.pkl", 3)
+        else:
+            self.clf = joblib.load("generalModel.pkl")
         
     def getData(self): 
         data = list() 
@@ -26,7 +33,8 @@ class GeneralModel(object):
             sampleNum = (int) (totalLen * self.ratio) 
             sampleIdxList = sorted(random.sample(range(totalLen), sampleNum)) 
             for idx in sampleIdxList:
-                data.append(combiner.combinedDataList[idx]) 
+                data.append(combiner.combinedDataList[idx])
+            del combiner
         return data 
     
     def getDBNames(self): 
@@ -36,12 +44,17 @@ class GeneralModel(object):
     def generalLRModel(self): 
         clf = LogisticRegression(C=0.01) 
         clf.fit(self.data, self.label) 
-        return clf 
+        return clf
+
+    def decisionTreeModel(self):
+        clf = DecisionTreeClassifier(criterion = 'entropy')
+        clf.fit(self.data, self.label)
+        return clf
     
     def predictSleep(self, testData, testLabels): 
         predicts = self.clf.predict(testData) 
         self.showClassificationInfo(predicts, testLabels) 
-        return predicts  
+        return predicts
     
     def showClassificationInfo(self, predicts, labels):
         """
@@ -70,15 +83,20 @@ if __name__ == "__main__":
     fullData, fullLabel = generator.generateFullDataset() 
     """
     
-    model = GeneralModel() 
+    model = GeneralModel(0.3, False)
     
     for dbFile in model.dbList:
         combiner = DataCombiner(dbFile) 
         combiner.combineData() 
         generator = DataGenerator(combiner.combinedDataList, 0.0, 0.3) 
-        fullData, fullLabel = generator.generateFullDataset() 
+        fullData, fullLabel = generator.generateFullDataset(t=12)
         print "\n\nDB: " + dbFile 
-        model.predictSleep(fullData, fullLabel) 
+        model.predictSleep(fullData, fullLabel)
+        del combiner
+        del generator
+        del fullData
+        del fullLabel
+
     
     
     

@@ -31,7 +31,7 @@ class SensingData(object):
         
     def __repr__(self):
         dateStr = self.createTime.strftime("%Y-%m-%d %H:%M:%S")
-        return "%s | %s | %d | %f | %f | %f | %d | %d | %d | %d | %f | %f | %s | %s\n" % (dateStr, self.trackDate, self.movement, self.illuminanceMax, self.illuminanceMin, self.illuminanceAvg, 
+        return "%s | %s | %d | %f | %f | %f | %d | %d | %d | %d | %f | %f | %s | %s" % (dateStr, self.trackDate, self.movement, self.illuminanceMax, self.illuminanceMin, self.illuminanceAvg,
                     self.decibelMax, self.decibelMin, self.decibelAvg, self.isCharging, self.powerLevel, self.proximity, self.ssid, self.appUsage)
 
 
@@ -52,7 +52,7 @@ class SleepLog(object):
         createStr = self.createTime.strftime("%Y-%m-%d %H:%M:%S")
         sleepStr = self.sleepTime.strftime("%Y-%m-%d %H:%M:%S")
         wakeupStr = self.wakeupTime.strftime("%Y-%m-%d %H:%M:%S")
-        return "%s | %s | %s | %s | %d | %d\n" % (createStr, self.trackDate, sleepStr, wakeupStr, self.quality, self.finished)
+        return "%s | %s | %s | %s | %d | %d" % (createStr, self.trackDate, sleepStr, wakeupStr, self.quality, self.finished)
 
 
 class SysEvent(object):
@@ -68,7 +68,7 @@ class SysEvent(object):
         
     def __repr__(self):
         createStr = self.createTime.strftime("%Y-%m-%d %H:%M:%S")
-        return "%s | %s | %s\n" % (createStr, self.trackDate, self.events[self.eventType - 1])
+        return "%s | %s | %s" % (createStr, self.trackDate, self.events[self.eventType - 1])
     
 
 class CombinedData(object):

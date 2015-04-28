@@ -66,9 +66,9 @@ class DataGenerator(object):
             data.append(combinedData.decibelMin)
             data.append(combinedData.decibelAvg)
             data.append(combinedData.decibelStd)
-            data.append(combinedData.isCharging) 
+            data.append(combinedData.isCharging)
             data.append(combinedData.powerLevel)
-            data.append(combinedData.proximity) 
+            data.append(combinedData.proximity)
             data.append(combinedData.screenOnSeconds) 
         
         if (t % 4) / 2 >= 1:
